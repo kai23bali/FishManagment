@@ -7,16 +7,17 @@ Assignment Breakdown
 
   User login - Kai Bali
 
-  Menuing
+  Menuing - CJ Chua
 
   Inventory class - Brian Nguyen
 
   Item class - Brian Nguyen
 
-  Order class
+  Order class - Brian Nguyen
 
-  shopping Cart class
+  shopping Cart class -CJ
 
   User class - Kai Bali 
 
-  Database setup
+  Database setup - CJ
+
