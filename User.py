@@ -12,7 +12,6 @@ class User:
             "zip": 0
         }
         self.userID = 0
-        self.cart = shoppingCart()
         self.orderHistory = []
         self.payment = {
             "number": 0,

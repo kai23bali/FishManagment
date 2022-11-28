@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `costumer` (
-  `userID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL AUTO_INCREMENT,
   `orderID` int(11) DEFAULT NULL,
   `firstName` varchar(255) DEFAULT NULL,
   `lastName` varchar(255) DEFAULT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE `costumer` (
 --
 
 CREATE TABLE `inventory` (
-  `itemID` int(11) NOT NULL,
+  `itemID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) DEFAULT NULL,
   `describtion` varchar(255) DEFAULT NULL,
   `stock` int(11) DEFAULT NULL,
@@ -60,7 +60,7 @@ CREATE TABLE `inventory` (
 --
 
 CREATE TABLE `orders` (
-  `orderID` int(11) NOT NULL,
+  `orderID` int(11) NOT NULL AUTO_INCREMENT,
   `itemID` int(11) DEFAULT NULL,
   `userID` int(11) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,

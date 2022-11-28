@@ -1,3 +1,5 @@
+import time
+
 class ShoppingCart:
     def __init__(self, userID):
         self.userID = userID
@@ -65,7 +67,7 @@ class ShoppingCart:
                        " AND itemID = (SELECT itemID FROM inventory WHERE name=" + item + ";")
 
     def checkOut(self, cursor): # requires connection.commit() following function call
-        cursor.execute("SELECT itemID, quantity, name FROM shoppingcart WHERE userID=" + str(self.userID) + ";")
+        cursor.execute("SELECT itemID, quantity FROM shoppingcart WHERE userID=" + str(self.userID) + ";")
         results = cursor.fetchall()
 
         if not results:
@@ -73,18 +75,23 @@ class ShoppingCart:
             return
 
         for item in results: # makes sure there are enough items in stock for checkout
-            cursor.execute("SELECT stock FROM inventory WHERE itemID=" + item[0])
+            cursor.execute("SELECT stock, name FROM inventory WHERE itemID=" + item[0])
             itemStock = cursor.fetchall()
             if itemStock[0][0] < item[1]:
-                print("There are not enough " + item[2] + " in stock. There are only " + item[1] +
+                print("There are not enough " + itemStock[0][1] + " in stock. There are only " + item[1] +
                       " in stock\n")
                 return
 
         totalPrice = 0.0
+        orderTime = time.asctime()
         for item in results: # decrease stock by amount being purchased
-            cursor.execute("SELECT stock, price FROM inventory WHERE itemID=" + item[0] + ";")
+            cursor.execute("SELECT stock, price, name FROM inventory WHERE itemID=" + item[0] + ";")
             itemStock = cursor.fetchall()
             cursor.execute("UPDATE inventory SET stock=" + str(int(itemStock[0][0]-int(item[1]))) + " WHERE itemID=" + item[0] + ";")
+            query = "INSERT INTO orders (itemID, userID, name, quantity, price, orderTime)" \
+                    "VALUES (%s, %s, %s, %s, %s, %s"
+            data = (item[0], self.userID, itemStock[0][2], item[1], orderTime)
+            cursor.execute(query, data)
             cursor.execute("DELETE FROM shoppingcart WHERE userID=" + str(self.userID) + " AND itemID=" + item[0] + ";")
             totalPrice += float(itemStock[0][1]) * float(item[1])
 
