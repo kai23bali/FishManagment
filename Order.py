@@ -1,11 +1,21 @@
-
 class Order:
-    def __init__(self):
-        self.ID = -1
+    def __init__(self, cursor):
+        self.cursor = cursor
 
-    def addItem(self, itemID, quantity, price):
+    # Add entry to user's order history
+    def addEntry(self, itemsBought):
+        
         return
-
-    def setDateTime(self, dateTime):
+    
+    # Remove entry from user's order history
+    def removeEntry(self, orderID):
+        return
+    
+    # Clear user's entire order history
+    def clearHistory(self):
+        return
+    
+    # View user's entire order history
+    def viewHistory(self):
         return
 
