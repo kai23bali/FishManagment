@@ -1,4 +1,6 @@
 import Inventory
+import menuing
+import ShoppingCart
 import mysql.connector
 import sys
 
@@ -10,14 +12,21 @@ def main():
             host="localhost",
             user="root",
             password="root",
-            database="test"
+            database="fish management"
         )
     except mysql.connector.Error as e:
         print(e)
         sys.exit()
 
+    SC = ShoppingCart.ShoppingCart(1)
+
+
     # Cursor to send queries to database
     cursor = db.cursor()
+
+    menuing.pageSelect(cursor, db, SC)
+
+
          
     # Close cursor and datebase
     cursor.close()

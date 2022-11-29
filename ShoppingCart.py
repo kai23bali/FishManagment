@@ -1,5 +1,6 @@
 import time
 
+
 class ShoppingCart:
     def __init__(self, userID):
         self.userID = userID
@@ -15,17 +16,17 @@ class ShoppingCart:
             return
 
         for items in results:
-            cursor.execute("SELECT name, price FROM inventory WHERE itemID=" + items[0] + ";")
+            cursor.execute("SELECT name, price FROM inventory WHERE itemID=" + str(items[0]) + ";")
             itemInfo = cursor.fetchall()
-            print(itemInfo[0], "\t$", itemInfo[1], "\tX ", items[1])
-            totalCost += float(itemInfo[1]) * float(items[1])
-        print("\tCart Cost: $", totalCost, "\n")
+            print(itemInfo[0][0], "\t$", itemInfo[0][1], "\tX ", items[1])
+            totalCost += float(itemInfo[0][1]) * float(items[1])
+        print("\nCart Cost: $", "%.2f" % totalCost, "\n")
 
     def addItem(self, item, quantity, cursor):  # requires connection.commit() following function call
         if quantity < 1:
             print("Invalid quantity\n")
             return
-        cursor.execute("SELECT itemID, stock FROM inventory WHERE name=" + item + ";")
+        cursor.execute("SELECT itemID, stock FROM inventory WHERE name='" + item + "';")
         result = cursor.fetchall()
 
         if not result:
@@ -47,7 +48,7 @@ class ShoppingCart:
             return
 
         cursor.execute("SELECT itemID, quantity FROM shoppingcart WHERE userID=" + str(self.userID) +
-                       " AND itemID = (SELECT itemID FROM inventory WHERE name=" + item + ";")
+                       " AND itemID=(SELECT itemID FROM inventory WHERE name='" + item + "');")
         result = cursor.fetchall()
 
         if not result:
@@ -62,11 +63,12 @@ class ShoppingCart:
                            " AND itemID = (SELECT itemID FROM inventory WHERE name=" + item + ";")
             return
 
-        cursor.execute("UPDATE shoppingcart SET quantity=" + str(int(result[0][1]) - quantity) +
-                       "WHERE userID=" + str(self.userID) +
-                       " AND itemID = (SELECT itemID FROM inventory WHERE name=" + item + ";")
 
-    def checkOut(self, cursor): # requires connection.commit() following function call
+        cursor.execute("UPDATE shoppingcart SET quantity=" + str(int(result[0][1]) - quantity) +
+                       " WHERE userID=" + str(self.userID) +
+                       " AND itemID = (SELECT itemID FROM inventory WHERE name='" + item + "');")
+
+    def checkOut(self, cursor):  # requires connection.commit() following function call
         cursor.execute("SELECT itemID, quantity FROM shoppingcart WHERE userID=" + str(self.userID) + ";")
         results = cursor.fetchall()
 
@@ -74,35 +76,31 @@ class ShoppingCart:
             print("Shopping cart is empty\n")
             return
 
-        for item in results: # makes sure there are enough items in stock for checkout
-            cursor.execute("SELECT stock, name FROM inventory WHERE itemID=" + item[0])
+        for item in results:  # makes sure there are enough items in stock for checkout
+            cursor.execute("SELECT stock, name FROM inventory WHERE itemID=" + str(item[0]))
             itemStock = cursor.fetchall()
             if itemStock[0][0] < item[1]:
-                print("There are not enough " + itemStock[0][1] + " in stock. There are only " + item[1] +
+                print("There are not enough " + itemStock[0][1] + " in stock. There are only " + str(item[1]) +
                       " in stock\n")
                 return
 
         totalPrice = 0.0
         orderTime = time.asctime()
-        for item in results: # decrease stock by amount being purchased
-            cursor.execute("SELECT stock, price, name FROM inventory WHERE itemID=" + item[0] + ";")
+        for item in results:  # decrease stock by amount being purchased
+            cursor.execute("SELECT stock, price, name FROM inventory WHERE itemID=" + str(item[0]) + ";")
             itemStock = cursor.fetchall()
-            cursor.execute("UPDATE inventory SET stock=" + str(int(itemStock[0][0]-int(item[1]))) + " WHERE itemID=" + item[0] + ";")
+            cursor.execute(
+                "UPDATE inventory SET stock=" + str(int(itemStock[0][0] - int(item[1]))) + " WHERE itemID=" + str(item[
+                    0]) + ";")
             query = "INSERT INTO orders (itemID, userID, name, quantity, price, orderTime)" \
-                    "VALUES (%s, %s, %s, %s, %s, %s"
-            data = (item[0], self.userID, itemStock[0][2], item[1], orderTime)
+                    "VALUES (%s, %s, %s, %s, %s, %s)"
+            data = (item[0], self.userID, itemStock[0][2], item[1],itemStock[0][1], orderTime)
             cursor.execute(query, data)
-            cursor.execute("DELETE FROM shoppingcart WHERE userID=" + str(self.userID) + " AND itemID=" + item[0] + ";")
+            cursor.execute("DELETE FROM shoppingcart WHERE userID=" + str(self.userID) + " AND itemID=" + str(item[0]) + ";")
             totalPrice += float(itemStock[0][1]) * float(item[1])
 
-        print("Checkout complete! Your total is $", totalPrice, "\n")
+        print("Checkout complete! Your total is $", "%.2f" % totalPrice, "\n")
 
-
-
-
-
-
-    def clear(self, cursor): # requires connection.commit() following function call
-        cursor.execute("DELETE FROM shoppingcart WHERE userID=" + self.userID + ";")
+    def clear(self, cursor):  # requires connection.commit() following function call
+        cursor.execute("DELETE FROM shoppingcart WHERE userID=" + str(self.userID) + ";")
         print("Your shopping cart has been cleared\n")
-

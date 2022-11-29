@@ -6,7 +6,7 @@ def pageSelect(cursor, db, shoppingCart):
               "3.\tAccount Info\n"
               "4.\tExit Program")
 
-        userSel = input()
+        userSel = int(input())
 
         match userSel:
             case 1:
@@ -29,7 +29,7 @@ def cartMenu(cursor, db, shoppingCart):
               "3.\tClear Cart\n"
               "4.\tCheck Out\n"
               "5.\tGo Back")
-        userSel=input()
+        userSel = int(input())
 
         match userSel:
             case 1:
@@ -37,7 +37,7 @@ def cartMenu(cursor, db, shoppingCart):
             case 2:
                 fish = input("Which fish would you like to remove from your cart?")
                 quantity = int(input("How many?"))
-                shoppingCart.addItem(fish, quantity, cursor)
+                shoppingCart.removeItem(fish, quantity, cursor)
                 db.commit()
             case 3:
                 shoppingCart.clear(cursor)
@@ -50,8 +50,25 @@ def cartMenu(cursor, db, shoppingCart):
             case _:
                 print("Invalid input. Please try again.\n")
 
-def inventoryMenu(cursor, db):
-    return
+def inventoryMenu(cursor, db, inventory, shoppingCart):
+    while True:
+        print("Inventory options\n"
+              "1.\tView Inventory\n"
+              "2.\tAdd Item To Cart\n"
+              "3.\tGo Back\n")
+
+        userSel = int(input())
+
+        match userSel:
+            case 1:
+                print("Inventory viewer goes here")
+            case 2:
+                fish = input("Which fish would you like to add to your cart?")
+                quantity = int(input("How many?"))
+                shoppingCart.addItem(fish, quantity, cursor)
+                db.commit()
+            case 3:
+                return
 
 def accountMenu(cursor, db):
     return

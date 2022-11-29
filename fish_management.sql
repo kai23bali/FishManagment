@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 28, 2022 at 04:33 AM
--- Server version: 10.4.24-MariaDB
--- PHP Version: 8.1.6
+-- Generation Time: Nov 29, 2022 at 05:10 AM
+-- Server version: 10.4.27-MariaDB
+-- PHP Version: 8.1.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,16 +28,22 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `costumer` (
-  `userID` int(11) NOT NULL AUTO_INCREMENT,
-  `orderID` int(11) DEFAULT NULL,
-  `firstName` varchar(255) DEFAULT NULL,
-  `lastName` varchar(255) DEFAULT NULL,
-  `userName` varchar(255) DEFAULT NULL,
-  `passcode` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `shippingAddress` varchar(255) DEFAULT NULL,
-  `paymentInfo` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `userID` int(11) NOT NULL,
+  `firstName` varchar(255) NOT NULL,
+  `lastName` varchar(255) NOT NULL,
+  `userName` varchar(255) NOT NULL,
+  `passcode` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `shippingAddress` varchar(255) NOT NULL,
+  `paymentInfo` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `costumer`
+--
+
+INSERT INTO `costumer` (`userID`, `firstName`, `lastName`, `userName`, `passcode`, `email`, `shippingAddress`, `paymentInfo`) VALUES
+(1, 'CJ', 'Chua', 'chua2002', '12345', 'cj@b.com', 'sdgafd', 'dsfgsa');
 
 -- --------------------------------------------------------
 
@@ -46,12 +52,20 @@ CREATE TABLE `costumer` (
 --
 
 CREATE TABLE `inventory` (
-  `itemID` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) DEFAULT NULL,
-  `describtion` varchar(255) DEFAULT NULL,
-  `stock` int(11) DEFAULT NULL,
-  `price` float DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `itemID` int(5) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `description` varchar(500) NOT NULL,
+  `stock` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inventory`
+--
+
+INSERT INTO `inventory` (`itemID`, `name`, `description`, `stock`, `price`) VALUES
+(1, 'Redish-purple snapper', 'Like a red snapper, but with a splash of purple', 8, '34.65'),
+(2, 'Snaggletooth Carp', 'This one is a pest', 47, '0.99');
 
 -- --------------------------------------------------------
 
@@ -60,14 +74,21 @@ CREATE TABLE `inventory` (
 --
 
 CREATE TABLE `orders` (
-  `orderID` int(11) NOT NULL AUTO_INCREMENT,
-  `itemID` int(11) DEFAULT NULL,
-  `userID` int(11) DEFAULT NULL,
-  `name` varchar(255) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL,
-  `price` float DEFAULT NULL,
-  `orderTime` varchar(255) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `orderID` int(11) NOT NULL,
+  `itemID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `orderTime` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `orders`
+--
+
+INSERT INTO `orders` (`orderID`, `itemID`, `userID`, `name`, `quantity`, `price`, `orderTime`) VALUES
+(2, 2, 1, 'Snaggletooth Carp', 3, '0.99', 'Mon Nov 28 22:07:00 2022');
 
 -- --------------------------------------------------------
 
@@ -76,10 +97,10 @@ CREATE TABLE `orders` (
 --
 
 CREATE TABLE `shoppingcart` (
-  `itemID` int(11) DEFAULT NULL,
-  `userID` int(11) DEFAULT NULL,
-  `quantity` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `itemID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
+  `quantity` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Indexes for dumped tables
@@ -95,7 +116,8 @@ ALTER TABLE `costumer`
 -- Indexes for table `inventory`
 --
 ALTER TABLE `inventory`
-  ADD PRIMARY KEY (`itemID`);
+  ADD PRIMARY KEY (`itemID`),
+  ADD UNIQUE KEY `name` (`name`);
 
 --
 -- Indexes for table `orders`
@@ -103,14 +125,36 @@ ALTER TABLE `inventory`
 ALTER TABLE `orders`
   ADD PRIMARY KEY (`orderID`),
   ADD KEY `order_to_inventory` (`itemID`),
-  ADD KEY `order_to_costumer` (`userID`);
+  ADD KEY `order_to_user` (`userID`);
 
 --
 -- Indexes for table `shoppingcart`
 --
 ALTER TABLE `shoppingcart`
-  ADD KEY `shoppingcart_to_inventory` (`itemID`),
-  ADD KEY `shoppingcart_to_costumer` (`userID`);
+  ADD KEY `cart_to_inventory` (`itemID`),
+  ADD KEY `cart_to_user` (`userID`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `costumer`
+--
+ALTER TABLE `costumer`
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT for table `inventory`
+--
+ALTER TABLE `inventory`
+  MODIFY `itemID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `orders`
+--
+ALTER TABLE `orders`
+  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
@@ -120,15 +164,15 @@ ALTER TABLE `shoppingcart`
 -- Constraints for table `orders`
 --
 ALTER TABLE `orders`
-  ADD CONSTRAINT `order_to_costumer` FOREIGN KEY (`userID`) REFERENCES `costumer` (`userID`),
-  ADD CONSTRAINT `order_to_inventory` FOREIGN KEY (`itemID`) REFERENCES `inventory` (`itemID`);
+  ADD CONSTRAINT `order_to_inventory` FOREIGN KEY (`itemID`) REFERENCES `inventory` (`itemID`),
+  ADD CONSTRAINT `order_to_user` FOREIGN KEY (`userID`) REFERENCES `costumer` (`userID`);
 
 --
 -- Constraints for table `shoppingcart`
 --
 ALTER TABLE `shoppingcart`
-  ADD CONSTRAINT `shoppingcart_to_costumer` FOREIGN KEY (`userID`) REFERENCES `costumer` (`userID`),
-  ADD CONSTRAINT `shoppingcart_to_inventory` FOREIGN KEY (`itemID`) REFERENCES `inventory` (`itemID`);
+  ADD CONSTRAINT `cart_to_inventory` FOREIGN KEY (`itemID`) REFERENCES `inventory` (`itemID`),
+  ADD CONSTRAINT `cart_to_user` FOREIGN KEY (`userID`) REFERENCES `costumer` (`userID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
