@@ -1,4 +1,4 @@
-def pageSelect(cursor, db, shoppingCart):
+def pageSelect(cursor, db, shoppingCart, inventory, user):
     while True:
         print("Please select a numbered option:\n"
               "1.\tInventory\n"
@@ -10,11 +10,12 @@ def pageSelect(cursor, db, shoppingCart):
 
         match userSel:
             case 1:
-                inventoryMenu(cursor, db)
+                inventoryMenu(cursor, db, inventory, shoppingCart)
             case 2:
                 cartMenu(cursor, db, shoppingCart)
             case 3:
-                accountMenu(cursor, db)
+                if not (accountMenu(cursor, db, user)):
+                    return
             case 4:
                 return
             case _:
@@ -61,7 +62,14 @@ def inventoryMenu(cursor, db, inventory, shoppingCart):
 
         match userSel:
             case 1:
-                print("Inventory viewer goes here")
+                fishes = inventory.getAllItems()
+
+                print("Fish in inventory:")
+                for fish in fishes:
+                    print("$" + str(fish.getPrice())+"\t"+ fish.getName()+"\n\t"+ fish.getDescription(),
+                          "\n\tAvailable: ", fish.getQuantity())
+                print()
+
             case 2:
                 fish = input("Which fish would you like to add to your cart?")
                 quantity = int(input("How many?"))
@@ -69,6 +77,58 @@ def inventoryMenu(cursor, db, inventory, shoppingCart):
                 db.commit()
             case 3:
                 return
+            case _:
+                print("Invalid input. Please try again.\n")
 
-def accountMenu(cursor, db):
-    return
+def accountMenu(cursor, db, user):
+    while True:
+        print("Account Options:\n"
+              "1.\tEdit Account\n"
+              "2.\tView Order History\n"
+              "3.\tDelete Account\n"
+              "4.\tGo Back")
+
+        userSel = int(input())
+
+        match userSel:
+            case 1:
+                print("Would you like to edit:\n"
+                      "1.\tPayment information\n"
+                      "2.\tShipping information\n"
+                      "3.\tGo Back")
+                userSel = int(input())
+                if (userSel == 1):
+                    number = input("Card number;\t")
+                    code = input("Security code:\t")
+                    date = input("Expiration date:\t")
+                    address = input("Payment address:\t")
+                    owner = input("Cardholder name:\t")
+
+                    user.editPayment(number, code, date, address, owner)
+                    print("Payment info changed!\n")
+
+                elif(userSel == 2):
+                    address = input("Street address:\t")
+                    city = input("City:\t")
+                    state = input("State:\t")
+                    zip = input("Zip code:\t")
+
+                    user.editAddress(address, city, state, zip)
+                    print("Shipping info changed!\n")
+
+            case 2:
+                return True
+            case 3:
+                print("Are you sure you want to delete your account? (Y/n)")
+                delSel = input()
+                while not (delSel == "Y" or delSel == "n"):
+                    print("Invalid input. Try again")
+                    print("Are you sure you want to delete your account? (Y/n)")
+                    delSel = input()
+
+                if delSel == "Y":
+                    return False
+                else:
+                    print()
+            case 4:
+                return True

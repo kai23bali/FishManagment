@@ -5,7 +5,7 @@ class Inventory:
 
     # Check if inventory is empty
     def isEmpty(self):
-        self.cursor.execute("SELECT ID FROM inventory LIMIT 0,1")
+        self.cursor.execute("SELECT * FROM inventory LIMIT 0,1")
         result = self.cursor.fetchone()
         return True if result == None else False
     
@@ -31,8 +31,8 @@ class Inventory:
 
     # Get all items from inventory
     def getAllItems(self):
-        if self.isEmpty() == True: return False
-        
+        if self.isEmpty() == True: return ()
+
         self.cursor.execute("SELECT * FROM inventory")
         results = self.cursor.fetchall()
         
@@ -40,5 +40,5 @@ class Inventory:
         for row in results:
             item = Item.Item(row[0], row[1], row[2], row[3], row[4])
             itemList.append(item)
-        return tuple(itemList)
+        return (itemList)
     

@@ -11,7 +11,7 @@ class User:
             "state": "",
             "zip": 0
         }
-        self.userID = 0
+        self.userID = 1
         self.orderHistory = []
         self.payment = {
             "number": 0,

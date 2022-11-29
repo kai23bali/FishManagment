@@ -1,5 +1,6 @@
 import Inventory
 import menuing
+import User
 import ShoppingCart
 import mysql.connector
 import sys
@@ -19,12 +20,13 @@ def main():
         sys.exit()
 
     SC = ShoppingCart.ShoppingCart(1)
-
+    user = User.User()
 
     # Cursor to send queries to database
     cursor = db.cursor()
+    inventory = Inventory.Inventory(cursor)
 
-    menuing.pageSelect(cursor, db, SC)
+    menuing.pageSelect(cursor, db, SC, inventory, User)
 
 
          
