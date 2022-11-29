@@ -2,25 +2,31 @@ import Inventory
 import mysql.connector
 import sys
 
-# Main Function
-def main():
-    # Connect to database
+# Return a connection to database
+def connectDB(_database="", _host="localhost",_user="root",_password=""):
     try:
         db = mysql.connector.connect(
-            host="localhost",
-            user="root",
-            password="root",
-            database="test"
+            host=_host,
+            user=_user,
+            password=_password,
+            database=_database
         )
     except mysql.connector.Error as e:
         print(e)
         sys.exit()
+    return db
 
-    # Cursor to send queries to database
-    cursor = db.cursor()
-         
-    # Close cursor and datebase
+# Close connection to database
+def closeDB(db, cursor):
     cursor.close()
     db.close()
 
+# Main Function
+def main():
+    # Make connection to database
+    db = connectDB("fish_store")
+    cursor = db.cursor()
+    
+    # Close connection to database
+    closeDB(db, cursor)
 main()

@@ -5,7 +5,7 @@ class Inventory:
 
     # Check if inventory is empty
     def isEmpty(self):
-        self.cursor.execute("SELECT ID FROM inventory LIMIT 0,1")
+        self.cursor.execute("SELECT itemID FROM inventory LIMIT 0,1")
         result = self.cursor.fetchone()
         return True if result == None else False
     
@@ -13,7 +13,7 @@ class Inventory:
     def isAvailable(self, itemName):
         if self.isEmpty() == True: return False
         
-        query = "SELECT STOCK FROM inventory WHERE Name=%s"
+        query = "SELECT stock FROM inventory WHERE name=%s"
         data = (itemName,)
         self.cursor.execute(query, data)
         result = self.cursor.fetchone()
@@ -23,11 +23,15 @@ class Inventory:
     def getItem(self, itemName):
         if self.isEmpty() == True: return False
         
-        query = "SELECT * FROM inventory WHERE Name=%s"
+        query = "SELECT * FROM inventory WHERE name=%s"
         data = (itemName,)
         self.cursor.execute(query, data)
         result = self.cursor.fetchone()
-        return Item.Item(result[0], result[1], result[2], result[3], result[4])
+        
+        if result == None:
+            return False
+        else:
+            return Item.Item(result[0], result[1], result[2], result[3], result[4])
 
     # Get all items from inventory
     def getAllItems(self):
