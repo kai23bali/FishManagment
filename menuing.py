@@ -221,6 +221,8 @@ def accountMenu(cursor, db, user, orders):
                     delSel = input()
 
                 if delSel == "Y":
+                    user.deleteUser(cursor)
+                    db.commit()
                     return False
                 else:
                     print()

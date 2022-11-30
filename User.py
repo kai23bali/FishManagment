@@ -1,6 +1,6 @@
 
 class User:
-    def __init__(self):
+    def __init__(self, ):
         self.userID = 0
 
     def getID(self):
@@ -46,3 +46,11 @@ class User:
         cursor.execute("UPDATE costumer SET paymentInfo='" +
                        (number +"|"+ code +"|"+ date +"|"+ address +"|"+ owner)
                        + "' WHERE userID='" + str(self.userID) + "';")
+
+    def deleteUser(self, cursor):
+        cursor.execute("DELETE FROM orders WHERE userID="+str(self.userID)+";")
+        cursor.execute("DELETE FROM shoppingcart WHERE userID="+str(self.userID)+";")
+        cursor.execute("DELETE FROM costumer WHERE userID="+str(self.userID)+";")
+
+        print("User account deleted\n")
+

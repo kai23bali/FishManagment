@@ -78,8 +78,8 @@ class ShoppingCart:
             print("Invalid quantity\n")
             return
         elif int(result[0][1]) == quantity:
-            cursor.execute("DELETE FROM shoppingcart WHERE userID=" + str(self.userID) + \
-                           " AND itemID = (SELECT itemID FROM inventory WHERE name=" + item + ";")
+            cursor.execute("DELETE FROM shoppingcart WHERE userID=" + str(self.userID)
+                           +" AND itemID = (SELECT itemID FROM inventory WHERE name='" + item + "');")
             return
 
 
