@@ -1,3 +1,5 @@
+import Inventory
+import Item
 
 class ShoppingCart:
     def __init__(self):
