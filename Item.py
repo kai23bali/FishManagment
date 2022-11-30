@@ -1,11 +1,13 @@
-
 class Item:
-    def __init__(self):
-        self.name = ""
-        self.description = ""
-        self.ID = 0
-        self.quantity = ""
-        self.price = 0.0
+    def __init__(self, ID=None, name="", description="", quantity=None, price=None):
+        self.ID = ID
+        self.name = name
+        self.description = description
+        self.quantity = quantity
+        self.price = price
+
+    def getID(self):
+        return self.ID
 
     def getName(self):
         return self.name
@@ -13,21 +15,8 @@ class Item:
     def getDescription(self):
         return self.description
 
-    def getID(self):
-        return self.ID
-
     def getQuantity(self):
         return self.quantity
 
     def getPrice(self):
         return self.price
-
-    def isAvailable(self):
-        if self.quantity:
-            return True
-        else:
-            return False
-
-    def display(self):
-        return
-

@@ -1,4 +1,4 @@
-
+import ShoppingCart
 class User:
     def __init__(self):
         self.firstName = ""
@@ -12,7 +12,7 @@ class User:
             "zip": 0
         }
         self.userID = 0
-        self.cart = shoppingCart()
+        self.cart = ShoppingCart()
         self.orderHistory = []
         self.payment = {
             "number": 0,
@@ -60,6 +60,9 @@ class User:
 
     def getUserID(self):
         return self.userID
+
+    def getPayment(self):
+        return self.payment
 
     def editPayment(self, number, code, date, address, owner):
         self.payment = {
