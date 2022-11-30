@@ -20,9 +20,3 @@ class Item:
 
     def getPrice(self):
         return self.price
-
-    def isAvailable(self):
-        if self.quantity:
-            return True
-        else:
-            return False
