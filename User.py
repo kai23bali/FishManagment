@@ -31,13 +31,17 @@ class User:
     def editEmail(self, email):
         self.email = email
 
-    def editAddress(self, address, city, state, zip):
+    def editAddress(self, address, city, state, zip, cursor):
         self.shipping = {
             "address": address,
             "city": city,
             "state": state,
             "zip": zip
         }
+        cursor.execute("UPDATE costumer SET shippingAddress=" +
+                       (address +" "+ city +" "+ state +" "+ zip)
+                       + " WHERE userID=" + str(self.userID) + ";")
+
 
     def genUserID(self):
         return
@@ -60,7 +64,7 @@ class User:
     def getUserID(self):
         return self.userID
 
-    def editPayment(self, number, code, date, address, owner):
+    def editPayment(self, number, code, date, address, owner, cursor):
         self.payment = {
             "number": number,
             "code": code,
@@ -68,3 +72,6 @@ class User:
             "address": address,
             "owner": owner
         }
+        cursor.execute("UPDATE costumer SET paymentInfo=" +
+                       (number +" "+ code +" "+ date +" "+ address +" "+ owner)
+                       + " WHERE userID=" + str(self.userID) + ";")

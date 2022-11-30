@@ -1,4 +1,4 @@
-def pageSelect(cursor, db, shoppingCart, inventory, user):
+def pageSelect(cursor, db, shoppingCart, inventory, user): # main menu
     while True:
         print("Please select a numbered option:\n"
               "1.\tInventory\n"
@@ -22,7 +22,7 @@ def pageSelect(cursor, db, shoppingCart, inventory, user):
                 print("Invalid input. Please try again.\n")
 
 
-def cartMenu(cursor, db, shoppingCart):
+def cartMenu(cursor, db, shoppingCart): # shopping cart selections
     while True:
         print("Shopping cart options:\n"
               "1.\tView Current Cart\n"
@@ -104,7 +104,8 @@ def accountMenu(cursor, db, user):
                     address = input("Payment address:\t")
                     owner = input("Cardholder name:\t")
 
-                    user.editPayment(number, code, date, address, owner)
+                    user.editPayment(number, code, date, address, owner, cursor)
+                    db.commit()
                     print("Payment info changed!\n")
 
                 elif(userSel == 2):
@@ -113,7 +114,8 @@ def accountMenu(cursor, db, user):
                     state = input("State:\t")
                     zip = input("Zip code:\t")
 
-                    user.editAddress(address, city, state, zip)
+                    user.editAddress(address, city, state, zip, cursor)
+                    db.commit()
                     print("Shipping info changed!\n")
 
             case 2:
