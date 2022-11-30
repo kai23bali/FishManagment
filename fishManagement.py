@@ -1,4 +1,6 @@
 import Inventory
+import Order
+import Item
 import mysql.connector
 import sys
 
