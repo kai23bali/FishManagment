@@ -7,6 +7,7 @@ class Inventory:
     def _isEmpty(self):
         self.cursor.execute("SELECT itemID FROM inventory LIMIT 0,1")
         result = self.cursor.fetchone()
+        
         return True if result == None else False
     
     # Check if a specific item is available
