@@ -27,19 +27,38 @@ class ShoppingCart:
             print("Invalid quantity\n")
             return
         cursor.execute("SELECT itemID, stock FROM inventory WHERE name='" + item + "';")
-        result = cursor.fetchall()
+        inventoryInfo = cursor.fetchall()
 
-        if not result:
+        if not inventoryInfo:
             print("Invalid fish name\n")
             return
 
-        if result[0][1] < quantity:
+        cursor.execute("SELECT quantity FROM shoppingcart WHERE itemID="+str(inventoryInfo[0][0])+
+                       " AND userID ="+str(self.userID)+";")
+        prevCartInfo = cursor.fetchall()
+
+        addto = False #tracks whether it is adding to previous cart entry
+        if prevCartInfo:
+            print("&&&")
+            prevQuantity = prevCartInfo[0][0]
+            addto = True
+        else:
+            prevQuantity = 0
+
+
+        if inventoryInfo[0][1] < (quantity+prevQuantity):
             print("We do not have enough of your desired fish\n")
             return
 
-        query = "INSERT INTO shoppingcart (userID, itemID, quantity) VALUES (%s, %s, %s)"
-        data = (self.userID, result[0][0], quantity)
-        cursor.execute(query, data)
+        print(quantity+prevQuantity)
+        if addto:
+            query = "UPDATE shoppingcart SET quantity=" + str(quantity+prevQuantity) + "" \
+                    " WHERE itemID="+str(inventoryInfo[0][0])+" AND userID="+str(self.userID)+";"
+            cursor.execute(query)
+        else:
+            query = "INSERT INTO shoppingcart (userID, itemID, quantity) VALUES (%s, %s, %s)"
+            data = (self.userID, inventoryInfo[0][0], quantity)
+            cursor.execute(query, data)
         print(quantity, " ", item, " successfully added to cart!\n")
 
     def removeItem(self, item, quantity, cursor):  # requires connection.commit() following function call

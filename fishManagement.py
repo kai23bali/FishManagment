@@ -1,6 +1,6 @@
-import Inventory
 import mysql.connector
 import sys
+import menuing
 
 # Main Function
 def main():
@@ -10,7 +10,7 @@ def main():
             host="localhost",
             user="root",
             password="root",
-            database="test"
+            database="fish management"
         )
     except mysql.connector.Error as e:
         print(e)
@@ -18,6 +18,9 @@ def main():
 
     # Cursor to send queries to database
     cursor = db.cursor()
+
+    menuing.landingPage(cursor, db)
+
          
     # Close cursor and datebase
     cursor.close()
