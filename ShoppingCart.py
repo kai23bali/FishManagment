@@ -49,7 +49,6 @@ class ShoppingCart:
             print("We do not have enough of your desired fish\n")
             return
 
-        print(quantity+prevQuantity)
         if addto:
             query = "UPDATE shoppingcart SET quantity=" + str(quantity+prevQuantity) + "" \
                     " WHERE itemID="+str(inventoryInfo[0][0])+" AND userID="+str(self.userID)+";"
