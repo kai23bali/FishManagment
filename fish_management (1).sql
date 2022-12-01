@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 30, 2022 at 11:17 PM
+-- Generation Time: Dec 01, 2022 at 01:07 AM
 -- Server version: 10.4.24-MariaDB
 -- PHP Version: 8.1.6
 
@@ -44,7 +44,7 @@ CREATE TABLE `costumer` (
 
 INSERT INTO `costumer` (`userID`, `firstName`, `lastName`, `userName`, `passcode`, `email`, `shippingAddress`, `paymentInfo`) VALUES
 (1, 'CJ', 'Chua', 'chua2002', '12345', 'cj@b.com', 'sdgafd', 'dsfgsa'),
-(5, 'CJ', 'Chua', 'cj6886', '1234', 'cj6886@b.com', '345ear|sgw3e|gfae|df', '132412|34|12/324|wef233r|Charles Chua');
+(6, 'user', 'user', 'user', 'user', 'user', 'user|user|user|user', 'user|user|user|user|user');
 
 -- --------------------------------------------------------
 
@@ -68,7 +68,9 @@ INSERT INTO `inventory` (`itemID`, `name`, `description`, `stock`, `price`) VALU
 (1, 'Redish-purple snapper', 'Like a red snapper, but with a splash of purple', -1, '34.65'),
 (2, 'Snaggletooth Carp', 'This one is a pest', 35, '0.99'),
 (3, '1 fish', 'The first fish', 342, '1.00'),
-(4, '2 fish', 'The second fish', 811, '2.00');
+(4, '2 fish', 'The second fish', 807, '2.00'),
+(5, 'Klaus Heisler', 'The Smith family\'s hapless and mostly hated goldfish', 1, '19.99'),
+(6, 'Canned tuna', 'Not an active fellow', 98, '12.99');
 
 -- --------------------------------------------------------
 
@@ -92,11 +94,7 @@ CREATE TABLE `orders` (
 
 INSERT INTO `orders` (`orderID`, `itemID`, `userID`, `name`, `quantity`, `price`, `orderTime`) VALUES
 (2, 2, 1, 'Snaggletooth Carp', 3, '0.99', 'Mon Nov 28 22:07:00 2022'),
-(3, 2, 5, 'Snaggletooth Carp', 12, '0.99', 'Wed Nov 30 15:03:02 2022'),
-(4, 1, 5, 'Redish-purple snapper', 2, '34.65', 'Wed Nov 30 15:03:45 2022'),
-(5, 1, 5, 'Redish-purple snapper', 3, '34.65', 'Wed Nov 30 15:36:52 2022'),
-(6, 1, 5, 'Redish-purple snapper', 4, '34.65', 'Wed Nov 30 15:36:52 2022'),
-(7, 4, 5, '2 fish', 2, '2.00', 'Wed Nov 30 16:15:52 2022');
+(8, 4, 6, '2 fish', 2, '2.00', 'Wed Nov 30 16:23:44 2022');
 
 -- --------------------------------------------------------
 
@@ -157,19 +155,19 @@ ALTER TABLE `shoppingcart`
 -- AUTO_INCREMENT for table `costumer`
 --
 ALTER TABLE `costumer`
-  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `userID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `inventory`
 --
 ALTER TABLE `inventory`
-  MODIFY `itemID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `itemID` int(5) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `orders`
 --
 ALTER TABLE `orders`
-  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `orderID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables

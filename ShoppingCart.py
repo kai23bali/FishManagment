@@ -39,7 +39,6 @@ class ShoppingCart:
 
         addto = False #tracks whether it is adding to previous cart entry
         if prevCartInfo:
-            print("&&&")
             prevQuantity = prevCartInfo[0][0]
             addto = True
         else:
