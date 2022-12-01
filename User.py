@@ -1,74 +1,56 @@
-import ShoppingCart
+
 class User:
-    def __init__(self):
-        self.firstName = ""
-        self.lastName = ""
-        self.userName = ""
-        self.email = ""
-        self.shipping = {
-            "address": "",
-            "city": "",
-            "state": "",
-            "zip": 0
-        }
+    def __init__(self, ):
         self.userID = 0
-        self.cart = ShoppingCart()
-        self.orderHistory = []
-        self.payment = {
-            "number": 0,
-            "code": 0,
-            "date": "",
-            "address": "",
-            "owner": ""
-        }
 
-    def editName(self, first, last):
-        self.firstName = first
-        self.lastName = last
-
-    def editUserName(self, userName):
-        self.userName = userName
-
-    def editEmail(self, email):
-        self.email = email
-
-    def editAddress(self, address, city, state, zip):
-        self.shipping = {
-            "address": address,
-            "city": city,
-            "state": state,
-            "zip": zip
-        }
-
-    def genUserID(self):
-        return
-
-    def __del__(self):
-        return
-
-    def logout(self):
-        return
-
-    def getName(self):
-        return self.firstName, self.lastName
-
-    def getEmail(self):
-        return self.email
-
-    def getShipping(self):
-        return self.shipping
-
-    def getUserID(self):
+    def getID(self):
         return self.userID
 
-    def getPayment(self):
-        return self.payment
+    def createUser(self,cursor, firstName, lastName, passcode, paymentInfo,
+                   shippingAddress, userName, email):
+        query = "INSERT INTO costumer" \
+                "(firstName, lastName, passcode, paymentInfo," \
+                "shippingAddress, userName, email)" \
+                "VALUES (%s, %s, %s, %s, %s, %s, %s);"
+        values = (firstName, lastName, passcode, paymentInfo,
+                   shippingAddress, userName, email)
+        cursor.execute(query, values)
 
-    def editPayment(self, number, code, date, address, owner):
-        self.payment = {
-            "number": number,
-            "code": code,
-            "date": date,
-            "address": address,
-            "owner": owner
-        }
+
+        cursor.execute("SELECT userID FROM costumer WHERE username='" + userName + "';")
+        self.userID = cursor.fetchone()[0]
+
+    def loginUser(self, cursor):
+        username = input("Username:\t")
+        password = input("Password:\t")
+        cursor.execute("SELECT userID FROM costumer WHERE username='" + username+ "' AND passcode='" + password + "';")
+        result = cursor.fetchall()
+        if result:
+            self.userID = int(result[0][0])
+            print("Login successful")
+            return True
+
+        print("Incorrect username/password\n")
+        return False
+
+
+    def editAddress(self, address, city, state, zip, cursor):
+
+        cursor.execute("UPDATE costumer SET shippingAddress='" +
+                       (address +"|"+ city +"|"+ state +"|"+ zip)
+                       + "' WHERE userID='" + str(self.userID) + "';")
+
+
+    def editPayment(self, number, code, date, address, owner, cursor):
+
+        cursor.execute("UPDATE costumer SET paymentInfo='" +
+                       (number +"|"+ code +"|"+ date +"|"+ address +"|"+ owner)
+                       + "' WHERE userID='" + str(self.userID) + "';")
+
+    def deleteUser(self, cursor):
+        cursor.execute("DELETE FROM orders WHERE userID="+str(self.userID)+";")
+        cursor.execute("DELETE FROM shoppingcart WHERE userID="+str(self.userID)+";")
+        cursor.execute("DELETE FROM costumer WHERE userID="+str(self.userID)+";")
+
+        print("User account deleted\n")
+
