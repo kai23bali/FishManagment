@@ -1,34 +1,29 @@
-import Inventory
-import Order
-import Item
 import mysql.connector
 import sys
+import menuing
 
-# Return a connection to database
-def connectDB(_database="", _host="localhost",_user="root",_password=""):
+# Main Function
+def main():
+    # Connect to database
     try:
         db = mysql.connector.connect(
-            host=_host,
-            user=_user,
-            password=_password,
-            database=_database
+            host="localhost",
+            user="root",
+            password="root",
+            database="fish management"
         )
     except mysql.connector.Error as e:
         print(e)
         sys.exit()
-    return db
 
-# Close connection to database
-def closeDB(db, cursor):
+    # Cursor to send queries to database
+    cursor = db.cursor()
+
+    menuing.landingPage(cursor, db)
+
+         
+    # Close cursor and datebase
     cursor.close()
     db.close()
 
-# Main Function
-def main():
-    # Make connection to database
-    db = connectDB("fish_store")
-    cursor = db.cursor()
-    
-    # Close connection to database
-    closeDB(db, cursor)
 main()
